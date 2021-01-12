@@ -8,6 +8,7 @@ S-ESX is built upon these awesome scripts:
 
 - [FiveM](https://fivem.net "FiveM")
 - [ESX](https://github.com/esx-framework "ESX")
+- [Re-Ignited gcphone](https://github.com/Re-Ignited-Development "Re-Ignited gcphone")
 - [HumanTree92](https://github.com/HumanTree92 "HumanTree92")
 - [TomGrobbe](https://github.com/TomGrobbe/vMenu "TomGrobbe")
 
