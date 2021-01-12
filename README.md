@@ -6,8 +6,11 @@ This version is built off of version 1.2 (final) of ESX.
 
 S-ESX is built upon these awesome scripts:
 [FiveM](https://fivem.net "FiveM")
+
 [ESX](https://github.com/esx-framework "ESX")
+
 [HumanTree92](https://github.com/HumanTree92 "HumanTree92")
+
 [TomGrobbe](https://github.com/TomGrobbe/vMenu "TomGrobbe")
 
 ## INSTALL
