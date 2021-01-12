@@ -2,7 +2,7 @@
 
 s-ESX is intended to be a simplified method of installing the fantastic ESX framework in your FiveM server. Instead of tracking down all the resources, adding them and their SQL files, it's a single download, SQL import then crank it up!
 
-This version is built off of version 1.2 (final of ESX.
+This version is built off of version 1.2 (final) of ESX.
 
 S-ESX is built upon these awesome scripts:
 [FiveM](https://fivem.net "FiveM")
