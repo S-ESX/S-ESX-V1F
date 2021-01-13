@@ -706,7 +706,7 @@ CREATE TABLE `twitter_tweets` (
 --
 
 CREATE TABLE `users` (
-  `identifier` varchar(40) NOT NULL,
+  `identifier` varchar(60) NOT NULL,
   `accounts` longtext DEFAULT NULL,
   `group` varchar(50) DEFAULT 'user',
   `inventory` longtext DEFAULT NULL,
