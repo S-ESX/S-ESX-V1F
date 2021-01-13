@@ -1,15 +1,16 @@
 local isPaused, isDead, pickups = false, false, {}
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if NetworkIsPlayerActive(PlayerId()) then
-			TriggerServerEvent('esx:onPlayerJoined')
-			break
+if Config.MultiCharacter then
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(0)
+			if NetworkIsPlayerActive(PlayerId()) then
+				TriggerServerEvent('esx:onPlayerJoined')
+				break
+			end
 		end
-	end
-end)
+	end)
+end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
@@ -59,25 +60,21 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 			grade_label = playerData.job.grade_label
 		})
 	end
+	if not Config.MultiCharacter then
+		ESX.Game.Teleport(PlayerPedId(), {x = playerData.coords.x, y = playerData.coords.y, z = playerData.coords.z + 0.25, heading = playerData.coords.heading})
+		Citizen.Wait(500)
+	end
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx:onPlayerSpawn')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+	TriggerEvent('esx:restoreLoadout')
 
-	ESX.Game.Teleport(PlayerPedId(), {
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading
-	}, function()
-		TriggerServerEvent('esx:onPlayerSpawn')
-		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-		TriggerEvent('esx:restoreLoadout')
-
-		Citizen.Wait(4000)
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
-		StartServerSyncLoops()
-	end)
+	Citizen.Wait(4000)
+	ShutdownLoadingScreen()
+	ShutdownLoadingScreenNui()
+	FreezeEntityPosition(PlayerPedId(), false)
+	DoScreenFadeIn(10000)
+	StartServerSyncLoops()
 
 	TriggerEvent('esx:loadingScreenOff')
 end)
@@ -393,12 +390,10 @@ function StartServerSyncLoops()
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
-
-			if isDead then
-				Citizen.Wait(500)
-			else
-				local playerPed = PlayerPedId()
-
+			local letSleep = true
+			local playerPed = PlayerPedId()
+			if IsPedArmed(playerPed, 4) then
+				letSleep = false
 				if IsPedShooting(playerPed) then
 					local _,weaponHash = GetCurrentPedWeapon(playerPed, true)
 					local weapon = ESX.GetWeaponFromHash(weaponHash)
@@ -408,6 +403,9 @@ function StartServerSyncLoops()
 						TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
 					end
 				end
+			end
+			if letSleep then
+				Citizen.Wait(500)
 			end
 		end
 	end)
@@ -435,17 +433,17 @@ function StartServerSyncLoops()
 	end)
 end
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if IsControlJustReleased(0, 289) then
-			if IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-				ESX.ShowInventory()
-			end
-		end
+RegisterCommand('+inventory', function()
+	if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		ESX.ShowInventory()
 	end
 end)
+
+RegisterCommand('-inventory', function()
+
+end)
+
+RegisterKeyMapping('+inventory', 'Open Inventory', 'keyboard', 'f2')
 
 -- Pickups
 Citizen.CreateThread(function()
