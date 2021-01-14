@@ -1,6 +1,6 @@
 local isPaused, isDead, pickups = false, false, {}
 
-if Config.MultiCharacter then
+if not Config.MultiCharacter then
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
