@@ -11,6 +11,7 @@ S-ESX is built upon these awesome scripts:
 - [Re-Ignited gcphone](https://github.com/Re-Ignited-Development "Re-Ignited gcphone")
 - [HumanTree92](https://github.com/HumanTree92 "HumanTree92")
 - [TomGrobbe](https://github.com/TomGrobbe/vMenu "TomGrobbe")
+- [Jacobwi](https://github.com/jacobwi/new_banking "Jacobwi") (Reskin by [ItsManueh](https://github.com/ItsManueh/ModifyUiNewBanking "ItsManueh"))
 
 ## INSTALL
 1. Download and install FiveM artifacts for your server
