@@ -38,9 +38,9 @@ INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 
 CREATE TABLE `addon_account_data` (
   `id` int(11) NOT NULL,
-  `account_name` varchar(100) DEFAULT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
   `money` int(11) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL
+  `owner` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -146,8 +146,8 @@ INSERT INTO `datastore` (`name`, `label`, `shared`) VALUES
 
 CREATE TABLE `datastore_data` (
   `id` int(11) NOT NULL,
-  `name` varchar(60) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) DEFAULT NULL,
   `data` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -706,7 +706,7 @@ CREATE TABLE `twitter_tweets` (
 --
 
 CREATE TABLE `users` (
-  `identifier` varchar(60) NOT NULL,
+  `identifier` varchar(255) NOT NULL,
   `accounts` longtext DEFAULT NULL,
   `group` varchar(50) DEFAULT 'user',
   `inventory` longtext DEFAULT NULL,
