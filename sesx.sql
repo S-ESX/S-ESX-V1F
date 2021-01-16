@@ -92,7 +92,7 @@ CREATE TABLE `addon_inventory_items` (
   `inventory_name` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `count` int(11) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL
+  `owner` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -416,7 +416,7 @@ CREATE TABLE `owned_properties` (
   `name` varchar(255) NOT NULL,
   `price` double NOT NULL,
   `rented` int(11) NOT NULL,
-  `owner` varchar(60) NOT NULL
+  `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -426,7 +426,7 @@ CREATE TABLE `owned_properties` (
 --
 
 CREATE TABLE `owned_vehicles` (
-  `owner` varchar(40) NOT NULL,
+  `owner` varchar(255) NOT NULL,
   `plate` varchar(12) NOT NULL,
   `vehicle` longtext DEFAULT NULL,
   `type` varchar(20) NOT NULL DEFAULT 'car',
@@ -458,7 +458,7 @@ CREATE TABLE `phone_app_chat` (
 
 CREATE TABLE `phone_calls` (
   `id` int(11) NOT NULL,
-  `owner` varchar(10) NOT NULL COMMENT 'Num tel proprio',
+  `owner` varchar(255) NOT NULL COMMENT 'Num tel proprio',
   `num` varchar(10) NOT NULL COMMENT 'Num reférence du contact',
   `incoming` int(11) NOT NULL COMMENT 'Défini si on est à l''origine de l''appels',
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -734,8 +734,8 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_licenses` (
   `id` int(11) NOT NULL,
-  `type` varchar(60) NOT NULL,
-  `owner` varchar(40) NOT NULL
+  `type` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
