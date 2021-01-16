@@ -131,7 +131,8 @@ elseif not Config.UseDeferrals then
 		else
 			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 				if string.match(v, 'license:') then
-					identifier = string.sub(v, 9)
+					identifier = v
+					--identifier = string.sub(v, 9) --This wasn't working due to license: being stored in user table.
 					break
 				end
 			end
