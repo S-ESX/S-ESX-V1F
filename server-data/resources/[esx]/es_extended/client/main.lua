@@ -415,14 +415,14 @@ function StartServerSyncLoops()
 		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 
 		while true do
-			Citizen.Wait(1000)
+			Citizen.Wait(5000)
 			local playerPed = PlayerPedId()
 
 			if DoesEntityExist(playerPed) then
 				local playerCoords = GetEntityCoords(playerPed)
 				local distance = #(playerCoords - previousCoords)
 
-				if distance > 1 then
+				if distance > 10 then
 					previousCoords = playerCoords
 					local playerHeading = ESX.Math.Round(GetEntityHeading(playerPed), 1)
 					local formattedCoords = {x = ESX.Math.Round(playerCoords.x, 1), y = ESX.Math.Round(playerCoords.y, 1), z = ESX.Math.Round(playerCoords.z, 1), heading = playerHeading}
