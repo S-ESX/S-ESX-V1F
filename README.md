@@ -12,6 +12,7 @@ S-ESX is built upon these awesome scripts:
 - [HumanTree92](https://github.com/HumanTree92 "HumanTree92")
 - [TomGrobbe](https://github.com/TomGrobbe/vMenu "TomGrobbe")
 - [Jacobwi](https://github.com/jacobwi/new_banking "Jacobwi") (Reskin by [ItsManueh](https://github.com/ItsManueh/ModifyUiNewBanking "ItsManueh"))
+- Kashacters (repo not available) Fork by [FiveEYZ](https://github.com/FiveEYZ/esx_kashacter "FiveEYZ")
 
 ## INSTALL
 1. Download and install FiveM artifacts for your server
@@ -19,6 +20,12 @@ S-ESX is built upon these awesome scripts:
 3. Modify server.cfg for your database, Steam and license key
 4. Import sesx.sql to your databse
 5. Start your server
+
+TO USE Kashacters
+1. Enable esx_kashacters in server.cfg
+2. Set Config.MultiCharacter to `true` in /[esx]/es_extended/config.lua
+
+This will enable the Kashacters system.  This has to be done on a new database, it's not intended for switching back and forth between the stock ESX and Kash systems, doing so can cause errors and character data being lost.
 
 [Youtube install how-to](https://www.youtube.com/watch?v=6dx_Gtf_8z0 "Youtube install how-to")
 
