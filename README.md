@@ -21,7 +21,7 @@ S-ESX is built upon these awesome scripts:
 4. Import sesx.sql to your databse
 5. Start your server
 
-#TO USE Kashacters
+##TO USE Kashacters
 1. Enable esx_kashacters in server.cfg
 2. Set Config.MultiCharacter to `true` in /[esx]/es_extended/config.lua
 
