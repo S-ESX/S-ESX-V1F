@@ -8,6 +8,7 @@ version '1.0.2'
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
+	'config.lua',
 	'server/classes/datastore.lua',
 	'server/main.lua'
 }

@@ -1,3 +1,9 @@
+if Config.MultiCharacter then
+	print('Multicharacter enabled.')
+else
+	print('Multicharacter disabled.')
+end
+
 local firstSpawn, PlayerLoaded = true, false
 
 isDead = false
@@ -34,26 +40,47 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-AddEventHandler('esx:onPlayerSpawn', function()
-	isDead = false
+if not Config.MultiCharacter then
+	AddEventHandler('esx:onPlayerSpawn', function()
+		isDead = false
 
-	if firstSpawn then
-		firstSpawn = false
+		if firstSpawn then
+			firstSpawn = false
 
-		if Config.AntiCombatLog then
-			while not PlayerLoaded do
-				Citizen.Wait(1000)
-			end
-
-			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
-				if shouldDie then
-					ESX.ShowNotification(_U('combatlog_message'))
-					RemoveItemsAfterRPDeath()
+			if Config.AntiCombatLog then
+				while not PlayerLoaded do
+					Citizen.Wait(1000)
 				end
-			end)
+
+				ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+					if shouldDie then
+						ESX.ShowNotification(_U('combatlog_message'))
+						RemoveItemsAfterRPDeath()
+					end
+				end)
+			end
 		end
-	end
-end)
+	end)
+else
+	RegisterNetEvent('esx_ambulancejob:multicharacter')
+	AddEventHandler('esx_ambulancejob:multicharacter', function()
+		isDead = false
+		if firstSpawn then
+			firstSpawn = false
+			if Config.AntiCombatLog then
+				while not PlayerLoaded do
+					Citizen.Wait(1000)
+				end
+				ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+					if isDead and Config.AntiCombatLog then
+						ESX.ShowNotification(_U('combatlog_message'))
+						RemoveItemsAfterRPDeath()
+					end
+				end)
+			end
+		end
+	end)
+end
 
 -- Create blips
 Citizen.CreateThread(function()
@@ -310,15 +337,28 @@ function RemoveItemsAfterRPDeath()
 	end)
 end
 
-function RespawnPed(ped, coords, heading)
-	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
-	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
-	SetPlayerInvincible(ped, false)
-	ClearPedBloodDamage(ped)
+if not Config.MultiCharacter then
+	function RespawnPed(ped, coords, heading)
+		SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+		NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+		SetPlayerInvincible(ped, false)
+		ClearPedBloodDamage(ped)
 
-	TriggerServerEvent('esx:onPlayerSpawn')
-	TriggerEvent('esx:onPlayerSpawn')
-	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx:onPlayerSpawn')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+	end
+else
+	function RespawnPed(ped, coords, heading)
+		SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+		NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+		SetPlayerInvincible(ped, false)
+		ClearPedBloodDamage(ped)
+	
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx_ambulancejob:multicharacter')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+	end
 end
 
 RegisterNetEvent('esx_phone:loaded')

@@ -1,36 +1,42 @@
 local isPaused, isDead, pickups = false, false, {}
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if NetworkIsPlayerActive(PlayerId()) then
-			TriggerServerEvent('esx:onPlayerJoined')
-			break
+if not Config.MultiCharacter then
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(0)
+			if NetworkIsPlayerActive(PlayerId()) then
+				TriggerServerEvent('esx:onPlayerJoined')
+				break
+			end
 		end
-	end
-end)
+	end)
+else
+	RegisterNetEvent('esx:kashloaded')
+	AddEventHandler('esx:kashloaded', function()
+		TriggerServerEvent('esx:onPlayerJoined')
+	end)
+end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
+	if not Config.MultiCharacter then
+		-- check if player is coming from loading screen
+		if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
+			local defaultModel = GetHashKey('a_m_y_stbla_02')
+			RequestModel(defaultModel)
 
-	-- check if player is coming from loading screen
-	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
-		local defaultModel = GetHashKey('a_m_y_stbla_02')
-		RequestModel(defaultModel)
+			while not HasModelLoaded(defaultModel) do
+				Citizen.Wait(10)
+			end
 
-		while not HasModelLoaded(defaultModel) do
-			Citizen.Wait(10)
+			SetPlayerModel(PlayerId(), defaultModel)
+			SetPedDefaultComponentVariation(PlayerPedId())
+			SetPedRandomComponentVariation(PlayerPedId(), true)
+			SetModelAsNoLongerNeeded(defaultModel)
 		end
-
-		SetPlayerModel(PlayerId(), defaultModel)
-		SetPedDefaultComponentVariation(PlayerPedId())
-		SetPedRandomComponentVariation(PlayerPedId(), true)
-		SetModelAsNoLongerNeeded(defaultModel)
 	end
-
 	-- freeze the player
 	FreezeEntityPosition(PlayerPedId(), true)
 
@@ -59,27 +65,36 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 			grade_label = playerData.job.grade_label
 		})
 	end
-
-	ESX.Game.Teleport(PlayerPedId(), {
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading
-	}, function()
+	if not Config.MultiCharacter then
+		ESX.Game.Teleport(PlayerPedId(), {
+			x = playerData.coords.x,
+			y = playerData.coords.y,
+			z = playerData.coords.z + 0.25,
+			heading = playerData.coords.heading
+		}, function()
+			TriggerServerEvent('esx:onPlayerSpawn')
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+			TriggerEvent('esx:restoreLoadout')
+	
+			Citizen.Wait(3000)
+			ShutdownLoadingScreen()
+			FreezeEntityPosition(PlayerPedId(), false)
+			DoScreenFadeIn(10000)
+			StartServerSyncLoops()
+		end)
+	else
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
 		TriggerEvent('esx:restoreLoadout')
-
-		Citizen.Wait(4000)
+	
+		Citizen.Wait(0)
 		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
 		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
+		DoScreenFadeIn(0)
 		StartServerSyncLoops()
-	end)
-
-	TriggerEvent('esx:loadingScreenOff')
+	end
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -393,12 +408,10 @@ function StartServerSyncLoops()
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
-
-			if isDead then
-				Citizen.Wait(500)
-			else
-				local playerPed = PlayerPedId()
-
+			local letSleep = true
+			local playerPed = PlayerPedId()
+			if IsPedArmed(playerPed, 4) then
+				letSleep = false
 				if IsPedShooting(playerPed) then
 					local _,weaponHash = GetCurrentPedWeapon(playerPed, true)
 					local weapon = ESX.GetWeaponFromHash(weaponHash)
@@ -409,6 +422,9 @@ function StartServerSyncLoops()
 					end
 				end
 			end
+			if letSleep then
+				Citizen.Wait(500)
+			end
 		end
 	end)
 
@@ -417,14 +433,14 @@ function StartServerSyncLoops()
 		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 
 		while true do
-			Citizen.Wait(1000)
+			Citizen.Wait(5000)
 			local playerPed = PlayerPedId()
 
 			if DoesEntityExist(playerPed) then
 				local playerCoords = GetEntityCoords(playerPed)
 				local distance = #(playerCoords - previousCoords)
 
-				if distance > 1 then
+				if distance > 10 then
 					previousCoords = playerCoords
 					local playerHeading = ESX.Math.Round(GetEntityHeading(playerPed), 1)
 					local formattedCoords = {x = ESX.Math.Round(playerCoords.x, 1), y = ESX.Math.Round(playerCoords.y, 1), z = ESX.Math.Round(playerCoords.z, 1), heading = playerHeading}
@@ -435,17 +451,17 @@ function StartServerSyncLoops()
 	end)
 end
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if IsControlJustReleased(0, 289) then
-			if IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-				ESX.ShowInventory()
-			end
-		end
+RegisterCommand('+inventory', function()
+	if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		ESX.ShowInventory()
 	end
 end)
+
+RegisterCommand('-inventory', function()
+
+end)
+
+RegisterKeyMapping('+inventory', 'Open Inventory', 'keyboard', 'f2')
 
 -- Pickups
 Citizen.CreateThread(function()

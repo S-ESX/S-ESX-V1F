@@ -38,9 +38,9 @@ INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 
 CREATE TABLE `addon_account_data` (
   `id` int(11) NOT NULL,
-  `account_name` varchar(100) DEFAULT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
   `money` int(11) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL
+  `owner` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -92,7 +92,7 @@ CREATE TABLE `addon_inventory_items` (
   `inventory_name` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `count` int(11) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL
+  `owner` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -146,8 +146,8 @@ INSERT INTO `datastore` (`name`, `label`, `shared`) VALUES
 
 CREATE TABLE `datastore_data` (
   `id` int(11) NOT NULL,
-  `name` varchar(60) NOT NULL,
-  `owner` varchar(40) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `owner` varchar(255) DEFAULT NULL,
   `data` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -416,7 +416,7 @@ CREATE TABLE `owned_properties` (
   `name` varchar(255) NOT NULL,
   `price` double NOT NULL,
   `rented` int(11) NOT NULL,
-  `owner` varchar(60) NOT NULL
+  `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -426,7 +426,7 @@ CREATE TABLE `owned_properties` (
 --
 
 CREATE TABLE `owned_vehicles` (
-  `owner` varchar(40) NOT NULL,
+  `owner` varchar(255) NOT NULL,
   `plate` varchar(12) NOT NULL,
   `vehicle` longtext DEFAULT NULL,
   `type` varchar(20) NOT NULL DEFAULT 'car',
@@ -458,7 +458,7 @@ CREATE TABLE `phone_app_chat` (
 
 CREATE TABLE `phone_calls` (
   `id` int(11) NOT NULL,
-  `owner` varchar(10) NOT NULL COMMENT 'Num tel proprio',
+  `owner` varchar(255) NOT NULL COMMENT 'Num tel proprio',
   `num` varchar(10) NOT NULL COMMENT 'Num reférence du contact',
   `incoming` int(11) NOT NULL COMMENT 'Défini si on est à l''origine de l''appels',
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -706,7 +706,7 @@ CREATE TABLE `twitter_tweets` (
 --
 
 CREATE TABLE `users` (
-  `identifier` varchar(40) NOT NULL,
+  `identifier` varchar(255) NOT NULL,
   `accounts` longtext DEFAULT NULL,
   `group` varchar(50) DEFAULT 'user',
   `inventory` longtext DEFAULT NULL,
@@ -734,8 +734,8 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_licenses` (
   `id` int(11) NOT NULL,
-  `type` varchar(60) NOT NULL,
-  `owner` varchar(40) NOT NULL
+  `type` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -2009,6 +2009,11 @@ ALTER TABLE `twitter_tweets`
   ADD CONSTRAINT `FK_twitter_tweets_twitter_accounts` FOREIGN KEY (`authorId`) REFERENCES `twitter_accounts` (`id`);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Kashacters compatability
+--
+CREATE TABLE `user_lastcharacter` (
+  `license` varchar(255) NOT NULL,
+  `charid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+COMMIT;
