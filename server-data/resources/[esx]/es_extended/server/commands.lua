@@ -63,15 +63,15 @@ end, true, {help = _U('command_giveitem'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
-	if args.playerId.hasWeapon(args.weapon) then
-		showError(_U('command_giveweapon_hasalready'))
-	else
-		xPlayer.addWeapon(args.weapon, args.ammo)
-	end
+    if args.playerId.hasWeapon(args.weapon) then
+        showError(_U('command_giveweapon_hasalready'))
+    else
+        args.playerId.addWeapon(args.weapon, args.ammo)
+    end
 end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'weapon', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-	{name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
+    {name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+    {name = 'weapon', help = _U('command_giveweapon_weapon'), type = 'weapon'},
+    {name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
 }})
 
 ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
