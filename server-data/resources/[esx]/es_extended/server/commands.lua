@@ -75,25 +75,25 @@ end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
-	if args.playerId.hasWeapon(args.weaponName) then
-		local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
+    if args.playerId.hasWeapon(args.weaponName) then
+        local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
 
-		if component then
-			if xPlayer.hasWeaponComponent(args.weaponName, args.componentName) then
-				showError(_U('command_giveweaponcomponent_hasalready'))
-			else
-				xPlayer.addWeaponComponent(args.weaponName, args.componentName)
-			end
-		else
-			showError(_U('command_giveweaponcomponent_invalid'))
-		end
-	else
-		showError(_U('command_giveweaponcomponent_missingweapon'))
-	end
+        if component then
+            if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
+                showError(_U('command_giveweaponcomponent_hasalready'))
+            else
+                args.playerId.addWeaponComponent(args.weaponName, args.componentName)
+            end
+        else
+            showError(_U('command_giveweaponcomponent_invalid'))
+        end
+    else
+        showError(_U('command_giveweaponcomponent_missingweapon'))
+    end
 end, true, {help = _U('command_giveweaponcomponent'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'weaponName', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-	{name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string'}
+    {name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+    {name = 'weaponName', help = _U('command_giveweapon_weapon'), type = 'weapon'},
+    {name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string'}
 }})
 
 ESX.RegisterCommand({'clear', 'cls'}, 'user', function(xPlayer, args, showError)
