@@ -103,7 +103,7 @@ CREATE TABLE `addon_inventory_items` (
 
 CREATE TABLE `billing` (
   `id` int(11) NOT NULL,
-  `identifier` varchar(40) NOT NULL,
+  `identifier` varchar(255) NOT NULL,
   `sender` varchar(40) NOT NULL,
   `target_type` varchar(50) NOT NULL,
   `target` varchar(40) NOT NULL,
@@ -489,7 +489,7 @@ CREATE TABLE `phone_messages` (
 
 CREATE TABLE `phone_users_contacts` (
   `id` int(11) NOT NULL,
-  `identifier` varchar(60) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `identifier` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `number` varchar(10) CHARACTER SET utf8mb4 DEFAULT NULL,
   `display` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '-1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -641,7 +641,7 @@ INSERT INTO `shops` (`id`, `store`, `item`, `price`) VALUES
 
 CREATE TABLE `society_moneywash` (
   `id` int(11) NOT NULL,
-  `identifier` varchar(60) NOT NULL,
+  `identifier` varchar(255) NOT NULL,
   `society` varchar(60) NOT NULL,
   `amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
