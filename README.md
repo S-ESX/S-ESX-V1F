@@ -18,7 +18,7 @@ S-ESX is built upon these awesome scripts:
 1. Download and install FiveM artifacts for your server
 2. Download and extract the S-ESX pack
 3. Modify server.cfg for your database, Steam and license key
-4. Import sesx.sql to your databse
+4. Import sesx.sql to your database
 5. Start your server
 
 ### TO USE Kashacters
